@@ -8,5 +8,8 @@
 
 char *evaluatePostfix( char *str );
 char *postfixToInfix( char *str );
+int countTokens(char *str);
+char **tokenizeString(char *str);
+char *concatenateString(char *op1, char *op2, char *evaluation);
 
 #endif
