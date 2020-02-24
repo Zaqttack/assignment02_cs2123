@@ -1,4 +1,4 @@
-# Makefile comments……
+# Makefile commentsï¿½ï¿½
 PROGRAMS = driver
 CC = gcc
 CFLAGS = -Wall -g

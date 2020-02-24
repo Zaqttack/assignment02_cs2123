@@ -29,15 +29,10 @@ char *evaluatePostfix( char *str )
     //result array is the new string created by tokens
     result = tokenizeString(str);
 
-    //stack is created if it is empty
     postFixStack = createStack();
 
     while(index < count) {
-
-        // printf("Looking at: %s\n", result[index]);
-
         if(strcmp(result[index], "T") == 0 || strcmp(result[index], "F") == 0) {
-            // printf("Pushing %s\n", result[index]);
             push(postFixStack, result[index]);
             index++;
         }
@@ -63,7 +58,6 @@ char *evaluatePostfix( char *str )
             op1 = pop(postFixStack);
             if(op1 == NULL || op2 == NULL)
                 return booleanToString(ERROR);
-            // printf("Evaluating op1 = %s op2 = %s\n", op1, op2);
 
             if(strcmp(result[index], "AND") == 0)
                 strcpy(op1, booleanToString(stringToBoolean(op1) && stringToBoolean(op2)));
@@ -109,14 +103,13 @@ char *postfixToInfix( char *str )
     int count;
     char **result;
     Stack *postFixToInfixStack;
-    char *op1, *op2, *evaluation = NULL;
+    char *op1, *op2, *evaluation;
 
     //counting the number of tokens in the string
     count = countTokens(str);
     //result array is the new string created by tokens
     result = tokenizeString(str);
 
-    //stack is created if it is empty
     postFixToInfixStack = createStack();
 
     while(index < count) {
@@ -130,16 +123,8 @@ char *postfixToInfix( char *str )
                 return "E";
 
             evaluation = (char*)malloc(sizeof(char));
-            //printf("op1: %s\n", op1);
 
             evaluation = concatenateString(op1, "blank", result[index]);
-
-            // strcat(evaluation, "( ");
-            // strcat(evaluation, "NOT ");
-            // strcat(evaluation, op1);
-            // strcat(evaluation, " )");
-
-            //printf("evaluation: %s\n", evaluation);
 
             push(postFixToInfixStack, evaluation);
 
@@ -156,15 +141,11 @@ char *postfixToInfix( char *str )
         {
             op2 = pop(postFixToInfixStack);
             op1 = pop(postFixToInfixStack);
+
             if(op1 == NULL || op2 == NULL)
                 return "E";
-            evaluation = (char*)malloc(sizeof(char));
-
-            //printf("op1: %s | op2: %s\n", op1, op2);
 
             evaluation = concatenateString(op1, op2, result[index]);
-            
-            //printf("evaluation: %s\n", evaluation);
 
             push(postFixToInfixStack, evaluation);
 
@@ -173,6 +154,7 @@ char *postfixToInfix( char *str )
             index++;
         }
     }
+    evaluation = (char*)malloc(sizeof(char));
     evaluation = pop(postFixToInfixStack);
 
     if(!isEmpty(postFixToInfixStack))
@@ -268,73 +250,59 @@ char **tokenizeString( char *str ){
 char *concatenateString(char *op1, char *op2, char *operation) {
     char *evaluation = (char*)malloc(sizeof(char));
 
+    strcpy(evaluation, "");
+
     if(strcmp(operation, "NOT") == 0) {
-        strcat(evaluation, "( ");
-        strcat(evaluation, operation);
-        strcat(evaluation, " ");
+        strcat(evaluation, "( NOT ");
         strcat(evaluation, op1);
         strcat(evaluation, " )");
     }
-    else if(strcmp(operation, "AND") == 0) {
+    if(strcmp(operation, "AND") == 0) {
         strcat(evaluation, "( ");
         strcat(evaluation, op1);
-        strcat(evaluation, " ");
-        strcat(evaluation, operation);
-        strcat(evaluation, " ");
+        strcat(evaluation, " AND ");
         strcat(evaluation, op2);
         strcat(evaluation, " )");
     }
     else if(strcmp(operation, "NAND") == 0) {
         strcat(evaluation, "( ");
         strcat(evaluation, op1);
-        strcat(evaluation, " ");
-        strcat(evaluation, operation);
-        strcat(evaluation, " ");
+        strcat(evaluation, " NAND ");
         strcat(evaluation, op2);
         strcat(evaluation, " )");
     }
     else if(strcmp(operation, "OR") == 0) {
         strcat(evaluation, "( ");
         strcat(evaluation, op1);
-        strcat(evaluation, " ");
-        strcat(evaluation, operation);
-        strcat(evaluation, " ");
+        strcat(evaluation, " OR ");
         strcat(evaluation, op2);
         strcat(evaluation, " )");
     }
     else if(strcmp(operation, "NOR") == 0) {
         strcat(evaluation, "( ");
         strcat(evaluation, op1);
-        strcat(evaluation, " ");
-        strcat(evaluation, operation);
-        strcat(evaluation, " ");
+        strcat(evaluation, " NOR ");
         strcat(evaluation, op2);
         strcat(evaluation, " )");
     }
     else if(strcmp(operation, "XOR") == 0) {
         strcat(evaluation, "( ");
         strcat(evaluation, op1);
-        strcat(evaluation, " ");
-        strcat(evaluation, operation);
-        strcat(evaluation, " ");
+        strcat(evaluation, " XOR ");
         strcat(evaluation, op2);
         strcat(evaluation, " )");
     }
     else if(strcmp(operation, "COND") == 0) {
         strcat(evaluation, "( ");
         strcat(evaluation, op1);
-        strcat(evaluation, " ");
-        strcat(evaluation, operation);
-        strcat(evaluation, " ");
+        strcat(evaluation, " COND ");
         strcat(evaluation, op2);
         strcat(evaluation, " )");
     }
     else if(strcmp(operation, "BICOND") == 0) {
         strcat(evaluation, "( ");
         strcat(evaluation, op1);
-        strcat(evaluation, " ");
-        strcat(evaluation, operation);
-        strcat(evaluation, " ");
+        strcat(evaluation, " BICOND ");
         strcat(evaluation, op2);
         strcat(evaluation, " )");
     }
